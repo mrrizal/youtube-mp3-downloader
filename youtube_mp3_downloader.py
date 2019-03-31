@@ -5,6 +5,7 @@ import aiohttp
 import ffmpy3
 import os
 import argparse
+import sys
 from hurry.filesize import size
 
 ydl_opts = {'quite': True}
@@ -23,7 +24,8 @@ def parse_audio_url(video_info):
                 highest_quality = format_
 
     if not highest_quality:
-        print('Fail: {} audio url not found'.format(video_info['title']))
+        print('Cannot download: {} audio url not found'.format(
+            video_info['title']))
         return None
 
     highest_quality['title'] = video_info['title']
@@ -58,7 +60,7 @@ async def fetch_url(output_dir, url, session):
         print('start downloading {}'.format(url['title']))
         with open(filename, 'wb') as f:
             async for data in resp.content.iter_chunked(chunk_size):
-                current_size += chunk_size
+                current_size += sys.getsizeof(data)
                 mystring = 'Download {}: {} from {}'.format(
                     url['title'], size(current_size), size(total_size))
                 print(mystring, end='\r', flush=True)
