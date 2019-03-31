@@ -49,7 +49,7 @@ async def convert_to_mp3(input_filename, output_filename):
 
 
 async def fetch_url(output_dir, url, session):
-    async with session.get(url['url']) as resp:
+    async with session.get(url['url'], timeout=None) as resp:
         filename = '{}/{}.{}'.format(output_dir, url['title'], url['ext'])
         print('start downloading {}'.format(url['title']))
         with open(filename, 'wb') as f:
@@ -62,8 +62,8 @@ async def fetch_url(output_dir, url, session):
 
 async def process_download(otuput_dir, url, session):
     webm_file = await fetch_url(output_dir, url, session)
-    mp3_file = await convert_to_mp3(
-        webm_file, '{}/{}.mp3'.format(output_dir, url['title']))
+    mp3_file = await convert_to_mp3(webm_file, '{}/{}.mp3'.format(
+        output_dir, url['title']))
     return mp3_file
 
 
