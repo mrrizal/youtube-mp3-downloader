@@ -5,6 +5,7 @@ import aiohttp
 import ffmpy3
 import os
 import argparse
+from hurry.filesize import size
 
 ydl_opts = {'quite': True}
 
@@ -49,12 +50,20 @@ async def convert_to_mp3(input_filename, output_filename):
 
 
 async def fetch_url(output_dir, url, session):
+    total_size = url['filesize']
+    current_size = 0
+    chunk_size = 1024 * 100
     async with session.get(url['url'], timeout=None) as resp:
         filename = '{}/{}.{}'.format(output_dir, url['title'], url['ext'])
         print('start downloading {}'.format(url['title']))
         with open(filename, 'wb') as f:
-            async for data in resp.content.iter_chunked(1024):
+            async for data in resp.content.iter_chunked(chunk_size):
+                current_size += chunk_size
+                mystring = 'Download {}: {} from {}'.format(
+                    url['title'], size(current_size), size(total_size))
+                print(mystring, end='\r', flush=True)
                 f.write(data)
+            print()
 
     print('sucessfully download {}'.format(url['title']))
     return filename
