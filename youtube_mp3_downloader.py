@@ -71,7 +71,7 @@ async def fetch_url(output_dir, url, session):
     return filename
 
 
-async def process_download(otuput_dir, url, session):
+async def process_download(output_dir, url, session):
     webm_file = await fetch_url(output_dir, url, session)
     mp3_file = await convert_to_mp3(webm_file, '{}/{}.mp3'.format(
         output_dir, url['title']))
