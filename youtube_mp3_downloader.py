@@ -8,7 +8,7 @@ import argparse
 import sys
 from hurry.filesize import size
 
-ydl_opts = {'quite': True}
+ydl_opts = {'quite': True, 'ignoreerrors': True}
 
 
 def parse_audio_url(video_info):
@@ -118,6 +118,9 @@ if __name__ == "__main__":
 
         audio_urls = []
         for video_info in result:
+            if video_info is None:
+                print('video cannot be downloaded')
+                continue
             audio_url = parse_audio_url(video_info)
             if audio_url is not None:
                 audio_urls.append(audio_url)
