@@ -1,4 +1,4 @@
-# youtbe-mp3-downloader
+# youtube-mp3-downloader
 asynchronous youtube mp3 downloader, Python 3.6+
 
 ## install
